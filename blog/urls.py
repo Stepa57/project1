@@ -19,4 +19,5 @@ urlpatterns = [
     path('forum/<int:forum_id>/posts/post/<int:post_id>/comment/<int:comment_id>/comment_edit/', views.comment_edit, name='comment_edit'),
     path('forum/<int:forum_id>/posts/post/<int:post_id>/comment_add/', views.comment_edit, name='comment_add'),
     path('forum/<int:forum_id>/posts/add', views.post_edit, name='post_add'),
+    path('add', views.forum_edit, name='forum_add'),
 ]

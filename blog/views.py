@@ -4,7 +4,7 @@ from django.utils import timezone
 from django.contrib.auth.decorators import login_required
 
 from .models import Forum, Post, Comment
-from .forms import PostForm, CommentForm
+from .forms import PostForm, CommentForm, ForumForm
 
 def forum_list(request):
     forums = Forum.objects.all()
@@ -109,3 +109,33 @@ def comment_update(request, post_id, forum_id, comment_id):
         comment.save()
         return redirect('post', forum_id=forum_id, post_id=post_id)
     return render(request, 'blog/post_edit.html', {'form': form})
+
+@login_required
+def forum_edit(request, forum_id=None):
+    if request.user.is_authenticated:
+        return forum_update(request, forum_id)
+    return redirect('forum_list')
+    
+def forum_update(request, forum_id):
+    if forum_id:    
+        try:
+            forum = Forum.all().get(id = forum_id)
+        except Forum.DoesNotExist:
+            raise Http404('Форум не найден')
+        if forum and forum.author != request.user:
+            return redirect('forum_list')
+        if request.method == "POST":
+            form = ForumForm(request.POST, instance=forum)
+        else:
+            form = ForumForm(instance=forum)
+    else:
+        if request.method == "POST":
+            form = ForumForm(request.POST)
+        else:
+            form = ForumForm()
+    if form.is_valid():
+        forum = form.save(commit=False)
+        forum.author = request.user
+        forum.save()
+        return redirect('post_list', forum_id=forum.id)
+    return render(request, 'blog/forum_edit.html', {'form': form})

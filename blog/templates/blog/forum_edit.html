@@ -1,4 +1,5 @@
 {% load static %}
+{% load widget_tweaks %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -9,10 +10,12 @@
           integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <link rel="stylesheet" href="{% static 'blog/css/theme.css' %}">
 </head>
+
 <body>
 
+<!-- Навигационная панель -->
 <nav class="navbar navbar-expand-lg navbar-light">
-    <a class="navbar-brand" href="">Блог</a>
+    <a class="navbar-brand" href="javascript:history. back()">Назад</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
             aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
@@ -36,25 +39,20 @@
     </div>
 </nav>
 
+<!-- панель ввода новой записи -->
 <div class="container mt-4">
-    <h2>Форумы</h2>
-    <table class="table">
-        <thead>
-        <tr>
-            <th scope="col">Название форума</th>
-            <th scope="col">Описание</th>
-        </tr>
-        </thead>
-        <tbody>
-            {% for forum in forums %}
-            <tr>
-                <td><a href="{% url 'post_list' forum_id=forum.id %}">{{ forum.title }}</a></td>
-                <td>{{ forum.description }}</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-    <a class="btn btn-primary btn-square" href="{% url 'forum_add' %}">Создать новый форум</a>
+    <h1>
+        {% if form.instance.id %}
+        Редактировать: {{ form.instance.title }}
+        {% else %}
+        Новый форум
+        {% endif %}
+    </h1>
+    <form method="POST" class="comment-form container">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-primary">Сохранить</button>
+    </form>
 </div>
 
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
@@ -65,12 +63,6 @@
         crossorigin="anonymous"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
         integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6zIeN0Ii6Uyj1rF1CjMQgrL4U8xWwzLIkvX6i"
-        crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" 
-        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" 
-        crossorigin="anonymous"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" 
-        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" 
         crossorigin="anonymous"></script>
 
 </body>

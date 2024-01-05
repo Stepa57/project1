@@ -7,12 +7,16 @@ import json
 
 class Forum(models.Model):
     title = models.CharField(max_length=200)
+    author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, default=False)
     description = models.TextField()
     objects = models.Manager()
 
     def toJSON(self):
         return json.dumps(self, default=lambda o: o.__dict__, 
             sort_keys=True, indent=4)
+    
+    def __str__(self):
+        return self.title
 
 class Post(models.Model):
     author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
